@@ -1,11 +1,10 @@
-//src/undex.js
+import  {initMongoConnection} from './db/initMongoConnection.js';
+import setupServer from './server.js';
 
-const setupServer = require('./server');
-const initMongoConnection = require('./db/initMongoConnection')
 
-async function startServer() {
+const bootstrap = async() => {
     await initMongoConnection();
     setupServer();
-}
+};
 
-startServer();
+bootstrap();

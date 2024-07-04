@@ -1,26 +1,74 @@
-// src/server.js
+import express from 'express';
+import cors from 'cors';
+import pino from 'pino-http';
 
-const express = require('express');
-const cors = require('cors');
-const pino = require('pino-http')();
+import env from './utils/env.js';
+import { getAllContacts, getContactById } from './services/contacts.js';
 
-function setupServer(){
-    const app = express();
+const port = Number(env('PORT', '3000'));
 
-    app.use(cors());
-    app.use(pino);
+const setupServer = () => {
+  const app = express();
 
-    app.use((req, res) => {
-        res.status(404).json({ message: 'Not found'});
+  const logger = pino({
+    transport: {
+      target: 'pino-pretty'
+    }
+  });
 
+  app.use(logger);
+
+  app.use(cors());
+  app.use(express.json());
+
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Welcome to the API!',
     });
+  });
 
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+  // app.get('/contacts', getContacts);
 
-    });
-    
-}
+  app.get('/contacts', async (req, res, next) => {
+    try {
+      const contacts = await getAllContacts();
+      res.status(200).json({
+        status: 200,
+        message: 'Contacts retrieved successfully',
+        data: contacts,
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
 
-module.export = setupServer;
+  app.get('/contacts/:contactId', async (req, res) => {
+    try {
+      const { contactId } = req.params;
+      const contact = await getContactById(contactId);
+
+      if (!contact) {
+        return res.status(404).json({
+          message: `Contact with id=${contactId} not found`
+        });
+      }
+      res.status(200).json({
+        status: 200,
+        message: `Successfully found contact with id=${contactId}`,
+        data: contact,
+      });
+    } catch (error) {
+      if (error.message.includes('Cast to ')) {
+        error.status = 404;
+      }
+      const { status = 500 } = error;
+      res.status(status).json({
+        message: error.message
+      });
+    }
+  });
+
+  app.listen(port, () => console.log(`Server running on ${port} PORT`));
+};
+
+export default setupServer;

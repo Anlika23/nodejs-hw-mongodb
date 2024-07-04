@@ -1,25 +1,24 @@
-// src/db/initMongoConnection.js
+import env from '../utils/env.js';
+import mongoose from 'mongoose';
 
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+export const initMongoConnection = async () => {
+  try {
+    const user = env('MONGODB_USER');
+    const pwd = env('MONGODB_PASSWORD');
+    const url = env('MONGODB_URL');
+    const db = env('MONGODB_DB');
 
-dotenv.config();
+    const DB_HOST = `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority`;
 
-const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_URL, MONGODB_DB } = process.env;
-const mongoUri = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_URL}/${MONGODB_DB}?retryWrites=true&w=majority`;
+    await mongoose.connect(DB_HOST, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Mongo connection successfully established!');
+  } catch (error) {
+    console.error(`Mongo connection error: ${error.message}`);
+    throw error;
+  }
+};
 
-
-async function initMongoConnection() {
-    try {
-        await mongoose.connect(mongoUri, {
-            useNeUriParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log('Mongo connection successfully established!');
-    } catch(error) {
-        console.error('Mongo connection error:', error);
-        process.exit(1);
-    }
-}
-
-module.exports = initMongoConnection;
+// export default initMongoConnection;
