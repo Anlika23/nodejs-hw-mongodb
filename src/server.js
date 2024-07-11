@@ -4,25 +4,21 @@ import pino from 'pino-http';
 
 import env from './utils/env.js';
 
-import {errorHandler } from './middlewares/errorHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
-import contactsRouret from './routers/contacts.js';
+import router from './routers/contacts.js';
 
-// Читаємо змінну оточення PORT
-const port = Number(env('PORT', '3000'));
+const port = env('PORT', '3000');
 
-// Функція створення сервера
-const setupServer = () => {
+ const setupServer = () => {
   const app = express();
 
-  const logger = pino({
-    transport: {
-      target: 'pino-pretty'
-    }
-  });
-
-  app.use(logger);
+  app.use(
+    pino({
+      transport: { target: 'pino-pretty' },
+    }),
+  );
 
   app.use(cors());
   app.use(express.json());
@@ -33,7 +29,7 @@ const setupServer = () => {
     });
   });
 
-  app.use(contactsRouret);
+  app.use(router);
 
   app.use('*', notFoundHandler);
 
