@@ -12,7 +12,10 @@ const contactsSchema = new Schema(
     },
     email: {
       type: String,
-      required: false,
+      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      trim: true,
+      lowercase: true,
+      // required: false,
     },
     isFavourite: {
       type: Boolean,
@@ -26,7 +29,7 @@ const contactsSchema = new Schema(
     },
   },
   {
-    versionKey: false, 
+    versionKey: false,
     timestamps: true,
   }
 );
