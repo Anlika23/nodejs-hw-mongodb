@@ -1,5 +1,7 @@
 import { model, Schema } from 'mongoose';
 
+
+
 const contactsSchema = new Schema(
   {
     name: {
@@ -15,7 +17,7 @@ const contactsSchema = new Schema(
       match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
       trim: true,
       lowercase: true,
-      // required: false,
+      required: false,
     },
     isFavourite: {
       type: Boolean,
