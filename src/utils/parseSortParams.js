@@ -1,4 +1,4 @@
-import { sortOrderList, contactsFieldList } from "../constants/constants.js";
+import { sortOrderList, contactsFieldList } from "../constants/contacts-constants.js";
 
 
 export const parseSortParams =({ sortBy, sortOrder }) => {
