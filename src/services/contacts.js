@@ -1,8 +1,6 @@
-
 import { ContactsCollection } from '../db/models/Contact.js';
 import { contactsFieldList, sortOrderList } from '../constants/contacts-constants.js';
 import { calcPaginationData } from '../utils/calcPaginationData.js';
-
 
 export const getAllContacts = async ({
   page = 1,
@@ -17,6 +15,7 @@ export const getAllContacts = async ({
   const contactsQuery = ContactsCollection.find({
     userId: filter.userId,
   });
+
   if (filter.contactType) {
     contactsQuery.where('contactType').equals(filter.contactType);
   }
@@ -30,25 +29,26 @@ export const getAllContacts = async ({
     .sort({ [sortBy]: sortOrder })
     .exec();
 
-
   const contactsCount = await ContactsCollection.find({
     userId: filter.userId,
-  })
-    .countDocuments();
+  }).countDocuments();
 
   const paginationData = calcPaginationData({
     total: contactsCount,
     page,
     perPage,
   });
+
   return {
     data: contacts,
-    ...paginationData
+    ...paginationData,
   };
 };
 
 export const getContactById = async (contactId, userId) => {
-  const contact = await ContactsCollection.findById({ _id: contactId, userId });
+  console.log(`Searching for contact with ID: ${contactId} and userID: ${userId}`);
+  const contact = await ContactsCollection.findOne({ _id: contactId, userId });
+  console.log(`Found contact: ${contact}`);
   return contact;
 };
 
@@ -63,16 +63,15 @@ export const updateContact = async (contactId, payload, options = {}) => {
     payload,
     {
       new: true,
-      includeResultMetadata: true,
       ...options,
-    },
+    }
   );
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!rawResult) return null;
 
   return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+    contact: rawResult,
+    isNew: Boolean(rawResult.upserted),
   };
 };
 

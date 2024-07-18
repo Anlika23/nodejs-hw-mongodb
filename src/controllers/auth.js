@@ -8,8 +8,6 @@ import {
 import { refreshUsersSession } from '../services/session.js';
 
 export const registerUserController = async (req, res) => {
-  // const { name, email, password } = req.body;
-  console.log('Request body:', req.body);
   const user = await registerUser(req.body);
 
   const data = {
