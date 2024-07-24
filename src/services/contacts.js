@@ -46,9 +46,7 @@ export const getAllContacts = async ({
 };
 
 export const getContactById = async (contactId, userId) => {
-  console.log(`Searching for contact with ID: ${contactId} and userID: ${userId}`);
   const contact = await ContactsCollection.findOne({ _id: contactId, userId });
-  console.log(`Found contact: ${contact}`);
   return contact;
 };
 
@@ -63,15 +61,16 @@ export const updateContact = async (contactId, payload, options = {}) => {
     payload,
     {
       new: true,
+      includeResultMetadata: true,
       ...options,
     }
   );
 
-  if (!rawResult) return null;
+  if (!rawResult || !rawResult.value) return null;
 
   return {
-    contact: rawResult,
-    isNew: Boolean(rawResult.upserted),
+    contact: rawResult.value,
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
   };
 };
 

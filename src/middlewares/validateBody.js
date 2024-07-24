@@ -8,7 +8,6 @@ export const validateBody = (schema) => {
             });
             next();
         } catch (error) {
-            // const errorMessage = error.details.map(detail => detail.message).join(', ');
             const responseError = createHttpError(400, error.message);
             next(responseError);
         }
