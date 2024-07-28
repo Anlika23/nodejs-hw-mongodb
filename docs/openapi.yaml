@@ -14,7 +14,7 @@ tags:
     description: Auth operations.
 servers:
   - url: http://localhost:3000
-  - url: https://contacts-app-lika44117.onrender.com
+  - url: https://nodejs-hw-mongodb-hw7.onrender.com
 paths:
   /contacts:
     get:
