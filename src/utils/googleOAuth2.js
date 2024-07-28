@@ -4,9 +4,9 @@ import { env } from './env.js';
 import { readFile } from 'node:fs/promises';
 import createHttpError from 'http-errors';
 
-const PATH_JSON = path.join(process.cwd(), 'google-oauth.json'); // шлях до файла
+const PATH_JSON = path.join(process.cwd(), 'google-oauth.json');
 
-const oauthConfig = JSON.parse(await readFile(PATH_JSON)); //прочитати вміст файла (JSON.parse=> отримуемо об'єкт)
+const oauthConfig = JSON.parse(await readFile(PATH_JSON));
 
 const googleOAuthClient = new OAuth2Client({
     clientId: env('GOOGLE_AUTH_CLIENT_ID'),
@@ -14,7 +14,6 @@ const googleOAuthClient = new OAuth2Client({
     redirectUri: oauthConfig.web.redirect_uris[0],
 });
 
-// ф-ція(бекенд), яка повертає посилання на гугл аутентифікацію
 export const generateAuthUrl = () =>
     googleOAuthClient.generateAuthUrl({
         scope: [

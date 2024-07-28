@@ -194,7 +194,7 @@
                   "phoneNumber": {
                     "description": "Contact's phone number",
                     "type": "string",
-                    "example": "+3809999999999"
+                    "example": "+3800000000010"
                   },
                   "email": {
                     "description": "Contact's email",
