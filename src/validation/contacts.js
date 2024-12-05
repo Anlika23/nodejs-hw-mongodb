@@ -4,7 +4,7 @@ import {
     phoneNumberRegexp,
     emailRegexp,
     typeList
- } from '../constants/constants.js';
+ } from '../constants/contacts-constants.js';
 
 export const createContactsShema = Joi.object({
     name: Joi.string().min(3).max(20).required().messages({
