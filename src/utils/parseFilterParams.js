@@ -1,4 +1,4 @@
-import { favouriteList, typeList } from "../constants/constants.js";
+import { favouriteList, typeList } from "../constants/contacts-constants.js";
 
 const parseType = (value) => {
     if (typeof value !== 'string') return;

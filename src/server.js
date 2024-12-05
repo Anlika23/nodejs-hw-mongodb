@@ -1,17 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
+import cookieParser from 'cookie-parser';
 
-import env from './utils/env.js';
+import { env } from './utils/env.js';
 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
-import router from './routers/contacts.js';
+import router from './routers/index.js';
 
 const port = Number(env('PORT', '3000'));
 
- const setupServer = () => {
+const setupServer = () => {
   const app = express();
 
   app.use(
@@ -22,6 +23,8 @@ const port = Number(env('PORT', '3000'));
 
   app.use(cors());
   app.use(express.json());
+
+  app.use(cookieParser());
 
   app.get('/', (req, res) => {
     res.json({
@@ -34,7 +37,6 @@ const port = Number(env('PORT', '3000'));
   app.use('*', notFoundHandler);
 
   app.use(errorHandler);
-
 
   app.listen(port, () => console.log(`Server running on ${port} PORT`));
 };
